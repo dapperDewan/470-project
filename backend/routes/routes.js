@@ -1,6 +1,9 @@
 import { Router } from "express";
 import playerController from "../controller/playerController.js";
 import teamController from "../controller/teamController.js";
+import featuresRoutes from "./features.js";
+import authRoutes from "./auth.js";
+import adminRoutes from "./admin.js";
 
 const router = Router();
 
@@ -17,5 +20,14 @@ router.get('/teams/:id', teamController.getTeamById);
 router.post('/teams', teamController.createTeam);
 router.put('/teams/:id', teamController.updateTeam);
 router.delete('/teams/:id', teamController.deleteTeam);
+
+// Features routes (favorites, dream team)
+router.use('/features', featuresRoutes);
+
+// Auth routes
+router.use(authRoutes);
+
+// Admin routes
+router.use(adminRoutes);
 
 export default router;

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const PlayerProfile = ({ playerId }) => {
+const PlayerProfile = () => {
+    const { id } = useParams();
     const [player, setPlayer] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPlayer = async () => {
             try {
-                const response = await axios.get(`/api/players/${playerId}`);
+                const response = await axios.get(`/api/players/${id}`);
                 setPlayer(response.data);
                 setLoading(false);
             } catch (error) {
@@ -16,9 +18,8 @@ const PlayerProfile = ({ playerId }) => {
                 setLoading(false);
             }
         };
-
         fetchPlayer();
-    }, [playerId]);
+    }, [id]);
 
     if (loading) return <div>Loading...</div>;
     if (!player) return <div>Player not found</div>;
