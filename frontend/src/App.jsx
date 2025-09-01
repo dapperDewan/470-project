@@ -9,6 +9,9 @@ import DreamTeamPage from './components/DreamTeamPage';
 import FavoriteTeamsPage from './components/FavoriteTeamsPage';
 import AdminDashboard from './components/AdminDashboard';
 import ViewDreamTeam from './components/ViewDreamTeam';
+import FixturesPage from './components/FixturesPage';
+import FunFacts from './components/FunFacts';
+import MerchandisePage from './components/MerchandisePage';
 
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
                 <Link to="/favorite-teams" className="text-yellow-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-yellow-400">Favorite Teams</Link>
                 <Link to="/dream-team" className="text-green-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-green-500">Dream Team</Link>
                 <Link to="/view-dreamteam" className="text-indigo-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-indigo-500">View Dream Team</Link>
+                <Link to="/fixtures" className="text-blue-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Fixtures</Link>
+                <Link to="/merchandise" className="text-red-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-red-500">Merchandise</Link>
+                <Link to="/fun-facts" className="text-pink-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-pink-500">Fun Facts</Link>
               </div>
             </div>
           </div>
@@ -48,7 +54,10 @@ function App() {
               <Route path="/favorite-teams" element={<FavoriteTeamsPage />} />
               <Route path="/dream-team" element={<DreamTeamPage />} />
               <Route path="/view-dreamteam" element={<ViewDreamTeam />} />
+              <Route path="/fixtures" element={<FixturesPage />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/merchandise" element={<MerchandisePage />} />
+              <Route path="/fun-facts" element={<FunFacts />} />
             </Routes>
           </div>
         </main>

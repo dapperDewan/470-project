@@ -1,11 +1,18 @@
+import merchandiseRoutes from "./merchandise.js";
 import { Router } from "express";
 import playerController from "../controller/playerController.js";
 import teamController from "../controller/teamController.js";
 import featuresRoutes from "./features.js";
 import authRoutes from "./auth.js";
 import adminRoutes from "./admin.js";
+import matchRoutes from "./match.js";
+import funFactsRoutes from "./funFacts.js";
 
 const router = Router();
+// Merchandise route
+router.use('/merchandise', merchandiseRoutes);
+// Fun Facts route
+router.use('/funFacts', funFactsRoutes);
 
 // Player routes
 router.get('/players', playerController.getAllPlayers);
@@ -23,6 +30,9 @@ router.delete('/teams/:id', teamController.deleteTeam);
 
 // Features routes (favorites, dream team)
 router.use('/features', featuresRoutes);
+
+// Match routes
+router.use('/match', matchRoutes);
 
 // Auth routes
 router.use(authRoutes);
