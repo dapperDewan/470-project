@@ -1,36 +1,40 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import AuthForm from './AuthForm';
+import AuthForms from './AuthForms';
 
 const HomePage = () => {
     const [news, setNews] = useState([]);
     const [featuredPlayers, setFeaturedPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(localStorage.getItem('username') || null);
+    const [showAuth, setShowAuth] = useState(false);
 
     useEffect(() => {
+        // Always sync user state with localStorage username
+        const saved = localStorage.getItem('username');
+        if (saved) setUser(saved);
         // Mock data for demonstration
         const mockNews = [
             {
                 id: 1,
                 title: "NBA Finals Highlights",
                 description: "Check out the best plays from last night's game",
-                image: "https://cdn.nba.com/manage/2024/06/nba-finals-2024-game-action.jpg", // NBA Finals game action
+                image: "https://media.gettyimages.com/id/2221584203/photo/oklahoma-city-oklahoma-shai-gilgeous-alexander-of-the-oklahoma-city-thunder-celebrates-with.jpg?s=612x612&w=0&k=20&c=2BWcbDNmQHlhHNx5L5c5h6SRPxj_ny4-FF-4VJWG8D8=", // Getty Images NBA highlight
                 date: "2025-08-05"
             },
             {
                 id: 2,
                 title: "Rising Stars Showcase",
                 description: "Young talents shine in summer league performances",
-                image: "https://cdn.nba.com/manage/2024/02/rising-stars-2024-event.jpg", // NBA Rising Stars event
+                image: "https://media.gettyimages.com/id/2198818522/photo/istanbul-turkiye-an-infographic-titled-nba-all-star-2025-created-in-istanbul-turkiye-on.jpg?s=612x612&w=0&k=20&c=PymK_RghUzEc7Xs358CF0S6U19ElttNoS7FCfsnkXMo=", // Getty Images NBA Rising Stars
                 date: "2025-08-04"
             },
             {
                 id: 3,
                 title: "Trade Deadline Updates",
                 description: "Latest transfers and team updates",
-                image: "https://cdn.nba.com/manage/2024/02/nba-trade-deadline-2024.jpg", // NBA Trade Deadline
+                image: "https://media.gettyimages.com/id/2197631357/photo/el-segundo-california-luka-doncic-of-the-los-angeles-lakers-holds-his-new-jersey-while.jpg?s=612x612&w=0&k=20&c=B_x6m7_c9sWMN8B_OQ6tO6YveYk4I5xb3sHNHydf_Yg=", // Getty Images NBA Trade Deadline
                 date: "2025-08-03"
             }
         ];
@@ -77,16 +81,27 @@ const HomePage = () => {
         </div>
     );
 
+    const handleAuth = (username) => {
+    setUser(username);
+    setShowAuth(false);
+    localStorage.setItem('username', username);
+    };
+
     return (
         <div className="space-y-12">
             {/* Auth Section */}
             <section className="py-8">
                 {!user ? (
-                    <AuthForm onAuth={setUser} />
+                    <button className="mb-4 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700" onClick={() => setShowAuth(true)}>Sign Up / Log In</button>
                 ) : (
                     <div className="max-w-sm mx-auto bg-green-100 p-6 rounded shadow text-center">
-                        <h2 className="text-xl font-bold mb-2">Welcome, {user.username}!</h2>
-                        <button className="mt-4 text-red-600 underline" onClick={() => setUser(null)}>Logout</button>
+                        <h2 className="text-xl font-bold mb-2">Welcome, {user}!</h2>
+                        <button className="mt-4 text-red-600 underline" onClick={() => {
+                          setUser(null);
+                          localStorage.removeItem('username');
+                          localStorage.removeItem('token');
+                          localStorage.removeItem('isAdmin');
+                        }}>Logout</button>
                     </div>
                 )}
             </section>
@@ -186,6 +201,15 @@ const HomePage = () => {
                     </div>
                 </div>
             </section>
+            {/* Auth Modal */}
+            {showAuth && (
+                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                    <div className="relative">
+                        <AuthForms onAuth={handleAuth} />
+                        <button className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl" onClick={() => setShowAuth(false)}>&times;</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

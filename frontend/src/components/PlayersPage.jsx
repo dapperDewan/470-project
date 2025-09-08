@@ -49,13 +49,14 @@ const PlayersPage = () => {
                 position: form.position,
                 number: Number(form.number),
                 height: form.height,
-                weight: form.weight,
+                weight: form.weight && !isNaN(Number(form.weight)) ? Number(form.weight) : form.weight,
                 age: Number(form.age),
                 stats: {
                     pointsPerGame: Number(form.pointsPerGame),
                     assistsPerGame: Number(form.assistsPerGame),
                     reboundsPerGame: Number(form.reboundsPerGame)
-                }
+                },
+                image: form.image
             };
             const response = await axios.post('/api/players', newPlayer);
             setPlayers([...players, response.data]);
@@ -71,20 +72,29 @@ const PlayersPage = () => {
     // Dream Team logic (backend per-user)
     const [dreamTeam, setDreamTeam] = useState([]);
     const [dreamTeamError, setDreamTeamError] = useState('');
+    const username = localStorage.getItem('username');
     // Fetch current user's dream team from backend
     useEffect(() => {
+        if (!username) return;
         async function fetchDreamTeam() {
             try {
-                const res = await axios.get('/api/dreamteam/my');
+                const token = localStorage.getItem('token');
+                const res = await axios.get('/api/dreamteam/my', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 setDreamTeam(res.data.players ? res.data.players.map(p => p._id) : []);
             } catch (err) {
                 setDreamTeam([]);
             }
         }
         fetchDreamTeam();
-    }, []);
+    }, [username]);
     // Update dream team in backend
     const handleDreamTeam = async (id) => {
+        if (!username) {
+            setDreamTeamError('Please log in to create your dream team.');
+            return;
+        }
         const strId = String(id);
         let updated;
         if (dreamTeam.includes(strId)) {
@@ -100,7 +110,10 @@ const PlayersPage = () => {
         }
         setDreamTeam(updated);
         try {
-            await axios.put('/api/dreamteam/my', { players: updated });
+            const token = localStorage.getItem('token');
+            await axios.put('/api/dreamteam/my', { players: updated }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
         } catch (err) {
             setDreamTeamError('Failed to update dream team.');
         }
@@ -130,6 +143,44 @@ const PlayersPage = () => {
         return 'https://cdn.nba.com/headshots/nba/latest/1040x760/2544.png';
     }
 
+    // Favorite players logic (per-user backend)
+    const [favoritePlayers, setFavoritePlayers] = useState([]);
+    useEffect(() => {
+        if (!username) return;
+        const token = localStorage.getItem('token');
+        async function fetchFavorites() {
+            try {
+                const res = await axios.get('/api/favorites/players', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setFavoritePlayers(Array.isArray(res.data) ? res.data.map(p => typeof p === 'object' ? p._id : p) : []);
+            } catch (err) {
+                setFavoritePlayers([]);
+            }
+        }
+        fetchFavorites();
+    }, [username]);
+
+    const handleFavorite = async (id) => {
+        if (!username) return;
+        const token = localStorage.getItem('token');
+        const strId = String(id);
+        let updated;
+        if (favoritePlayers.includes(strId)) {
+            updated = favoritePlayers.filter(pid => pid !== strId);
+        } else {
+            updated = [...favoritePlayers, strId];
+        }
+        setFavoritePlayers(updated);
+        try {
+            await axios.put('/api/favorites/players', { favorites: updated }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        } catch (err) {
+            // Optionally show error
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -147,6 +198,9 @@ const PlayersPage = () => {
                 <>
                 {dreamTeamError && (
                     <div className="mb-4 text-red-500 text-center">{dreamTeamError}</div>
+                )}
+                {!username && (
+                    <div className="mb-4 text-blue-600 text-center font-semibold">Log in to create and manage your dream team!</div>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {players.map((player) => (
@@ -174,7 +228,7 @@ const PlayersPage = () => {
                                         </div>
                                     </div>
                                 )}
-                                <div className="mt-4 flex justify-end space-x-2">
+                                <div className="mt-4 flex flex-wrap gap-2 justify-end">
                                     <button
                                         className={`px-3 py-1 rounded ${dreamTeam.includes(String(player._id)) ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700'} transition-colors`}
                                         onClick={() => handleDreamTeam(player._id)}
@@ -189,6 +243,12 @@ const PlayersPage = () => {
                                             Remove from Dream Team
                                         </button>
                                     )}
+                                    <button
+                                        className={`px-3 py-1 rounded ${favoritePlayers.includes(String(player._id)) ? 'bg-yellow-400 text-white' : 'bg-gray-200 text-gray-700'} transition-colors`}
+                                        onClick={() => handleFavorite(player._id)}
+                                    >
+                                        {favoritePlayers.includes(String(player._id)) ? 'Favorited' : 'Add to Favorites'}
+                                    </button>
                                 </div>
                             </div>
                         </div>

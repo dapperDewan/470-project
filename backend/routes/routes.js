@@ -1,4 +1,5 @@
 import merchandiseRoutes from "./merchandise.js";
+import favoritesRoutes from "./favorites.js";
 import { Router } from "express";
 import playerController from "../controller/playerController.js";
 import teamController from "../controller/teamController.js";
@@ -7,12 +8,15 @@ import authRoutes from "./auth.js";
 import adminRoutes from "./admin.js";
 import matchRoutes from "./match.js";
 import funFactsRoutes from "./funFacts.js";
+import dreamTeamRoutes from "./dreamTeam.js";
 
 const router = Router();
 // Merchandise route
 router.use('/merchandise', merchandiseRoutes);
 // Fun Facts route
 router.use('/funFacts', funFactsRoutes);
+// Dream Team route
+router.use('/dreamteam', dreamTeamRoutes);
 
 // Player routes
 router.get('/players', playerController.getAllPlayers);
@@ -28,8 +32,10 @@ router.post('/teams', teamController.createTeam);
 router.put('/teams/:id', teamController.updateTeam);
 router.delete('/teams/:id', teamController.deleteTeam);
 
-// Features routes (favorites, dream team)
+// Features routes (dream team)
 router.use('/features', featuresRoutes);
+// Favorites routes (per-user)
+router.use('/favorites', favoritesRoutes);
 
 // Match routes
 router.use('/match', matchRoutes);

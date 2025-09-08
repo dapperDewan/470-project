@@ -6,7 +6,8 @@ const MerchandiseSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   image: { type: String },
   stock: { type: Number, default: 10 },
-  category: { type: String }
+  category: { type: String },
+  verified: { type: Boolean, default: false }
 });
 
 const Merchandise = mongoose.model('Merchandise', MerchandiseSchema);

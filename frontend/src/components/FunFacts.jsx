@@ -25,6 +25,13 @@ function FunFacts() {
 
   return (
     <div className="max-w-xl mx-auto p-8 bg-gradient-to-br from-yellow-100 via-pink-100 to-blue-100 rounded-3xl shadow-2xl mt-8 text-center animate-fade-in relative">
+      <div className="mb-6 flex justify-center">
+        <img
+          src="https://media.gettyimages.com/id/71213032/photo/new-york-first-round-nba-draft-pick-kobe-bryant-poses-for-a-photo-note-to-user-user-expressly.jpg?s=612x612&w=0&k=20&c=ZSlrW0_YGThSsM4YhHMr2zFQZhVhM4kmatMC8K8K-kw="
+          alt="NBA Cap"
+          className="rounded-xl shadow-lg w-48 h-48 object-cover border-4 border-indigo-300"
+        />
+      </div>
       {showConfetti && (
         <div className="absolute inset-0 pointer-events-none z-10 animate-bounce">
           <span className="text-5xl select-none">🎉</span>

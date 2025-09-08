@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './components/HomePage';
+import AuthForms from './components/AuthForms';
 import PlayersPage from './components/PlayersPage';
 import TeamsPage from './components/TeamsPage';
 import PlayerProfile from './components/PlayerProfile';
@@ -14,6 +15,7 @@ import FunFacts from './components/FunFacts';
 import MerchandisePage from './components/MerchandisePage';
 
 function App() {
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
   return (
     <Router>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -27,16 +29,17 @@ function App() {
                 <span className="text-2xl font-bold tracking-tight">Hoop Hub</span>
               </Link>
               <div className="flex space-x-8">
-                <Link to="/" className="text-gray-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Home</Link>
-                <Link to="/players" className="text-gray-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Players</Link>
-                <Link to="/teams" className="text-gray-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Teams</Link>
-                <Link to="/favorites" className="text-yellow-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-yellow-400">Favorites</Link>
-                <Link to="/favorite-teams" className="text-yellow-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-yellow-400">Favorite Teams</Link>
-                <Link to="/dream-team" className="text-green-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-green-500">Dream Team</Link>
-                <Link to="/view-dreamteam" className="text-indigo-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-indigo-500">View Dream Team</Link>
-                <Link to="/fixtures" className="text-blue-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Fixtures</Link>
-                <Link to="/merchandise" className="text-red-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-red-500">Merchandise</Link>
-                <Link to="/fun-facts" className="text-pink-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-pink-500">Fun Facts</Link>
+                <Link to="/" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Home</Link>
+                <Link to="/players" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Players</Link>
+                <Link to="/teams" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Teams</Link>
+                <Link to="/favorites" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-yellow-400">Favorites</Link>
+                <Link to="/favorite-teams" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-yellow-400">Favorite Teams</Link>
+                <Link to="/dream-team" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-green-500">Dream Team</Link>
+                <Link to="/view-dreamteam" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-indigo-500">View Dream Team</Link>
+                <Link to="/fixtures" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-blue-500">Fixtures</Link>
+                <Link to="/merchandise" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-red-500">Merchandise</Link>
+                <Link to="/fun-facts" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-pink-500">Fun Facts</Link>
+                {isAdmin && <Link to="/admin" className="text-white hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 hover:bg-gray-700">Admin Panel</Link>}
               </div>
             </div>
           </div>
@@ -58,6 +61,7 @@ function App() {
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/merchandise" element={<MerchandisePage />} />
               <Route path="/fun-facts" element={<FunFacts />} />
+            <Route path="/login" element={<AuthForms />} />
             </Routes>
           </div>
         </main>
